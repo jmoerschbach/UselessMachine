@@ -21,20 +21,19 @@ void setup() {
 
 }
 //#################### Helper functions ##################################
-void moveHatch(uint8_t startPos, uint8_t endPos, uint16_t delayBetweenSteps) {
+void openHatch(uint8_t startPos, uint8_t endPos, uint16_t delayBetweenSteps) {
 	setHatch(startPos);
-	for (uint8_t i = startPos; i < endPos; i += 10) {
+	for (uint8_t i = startPos; i < endPos; i += 1) {
 		setHatch(i);
-		delay(delayBetweenSteps);
+		delay(delayBetweenSteps / 10);
 	}
 }
 
-void moveHatchBackwards(uint8_t startPos, uint8_t endPos,
-		uint16_t delayBetweenSteps) {
+void closeHatch(uint8_t startPos, uint8_t endPos, uint16_t delayBetweenSteps) {
 	setHatch(startPos);
-	for (uint8_t i = startPos; i > endPos; i -= 10) {
+	for (uint8_t i = startPos; i > endPos; i -= 1) {
 		setHatch(i);
-		delay(delayBetweenSteps);
+		delay(delayBetweenSteps / 10);
 	}
 }
 
@@ -48,18 +47,18 @@ void setHatch(uint8_t percent) {
 
 void moveLever(uint8_t startPos, uint8_t endPos, uint16_t delayBetweenSteps) {
 	setLever(startPos);
-	for (uint8_t i = startPos; i < endPos; i += 10) {
+	for (uint8_t i = startPos; i < endPos; i += 1) {
 		setLever(i);
-		delay(delayBetweenSteps);
+		delay(delayBetweenSteps / 10);
 	}
 }
 
 void moveLeverBackwards(uint8_t startPos, uint8_t endPos,
 		uint16_t delayBetweenSteps) {
 	setLever(startPos);
-	for (uint8_t i = startPos; i >= endPos; i -= 10) {
+	for (uint8_t i = startPos; i >= endPos; i -= 1) {
 		setLever(i);
-		delay(delayBetweenSteps);
+		delay(delayBetweenSteps / 10);
 	}
 }
 
@@ -75,7 +74,7 @@ void setLever(uint8_t percent) {
 //############################ Animations ###########################
 
 void cautious() {
-	moveHatch(0, 70, 200);
+	openHatch(0, 70, 200);
 	moveLever(0, 30, 0);
 	delay(1000);
 	moveLever(30, 100, 0);
@@ -87,17 +86,17 @@ void cautious() {
 }
 
 void fastest() {
-	moveHatch(0, 90, 10);
-	moveLever(0, 100, 0);
-	delay(500);
+	openHatch(0, 80, 10);
+	setLever(100);
+	delay(350);
 	setLever(0);
-	delay(100);
+	delay(200);
 	setHatch(0);
 	delay(100);
 }
 
 void provoking() {
-	moveHatch(0, 90, 200);
+	openHatch(0, 90, 200);
 	setLever(70);
 	delay(random(1000, 3000));
 	setLever(100);
@@ -109,18 +108,68 @@ void provoking() {
 }
 
 void makingSure() {
-	moveHatch(0, 90, 10);
+	openHatch(0, 90, 100);
 	moveLever(0, 100, 0);
 	delay(2000);
 	moveLeverBackwards(100, 30, 50);
-	setHatch(60);
+	closeHatch(90, 70, 100);
 	delay(1000);
-	moveHatch(60, 90, 50);
-	moveLever(30, 90, 200);
+	openHatch(60, 90, 50);
+	setLever(80);
 	delay(1000);
 	setLever(0);
-	delay(100);
+	delay(150);
 	setHatch(0);
+	delay(100);
+}
+
+void deking() {
+	long numberOfDisguises = random(2, 6);
+	for (uint8_t i = 0; i < numberOfDisguises; i++) {
+		setHatch(70);
+		delay(400);
+		setHatch(0);
+		delay(200);
+		delay(random(100, 1000));
+	}
+	setHatch(80);
+	setLever(100);
+	delay(400);
+	setLever(0);
+	delay(200);
+	setHatch(0);
+	delay(200);
+}
+void scouting() {
+	openHatch(0, 50, 50);
+	delay(random(500, 2500));
+	closeHatch(50, 0, 50);
+	delay(random(2000));
+	delay(2000);
+	fastest();
+
+}
+void slowFast() {
+	openHatch(0, 80, 50);
+	moveLever(30, 70, 500);
+	delay(400);
+	setLever(100);
+	delay(100);
+	setLever(0);
+	delay(200);
+	setHatch(0);
+	delay(100);
+}
+
+void slowFastSlow() {
+	openHatch(0, 80, 200);
+	moveLever(30, 70, 500);
+	delay(400);
+	setLever(100);
+	delay(300);
+	moveLeverBackwards(100, 10, 500);
+	setHatch(0);
+	setLever(0);
 	delay(100);
 }
 
@@ -147,16 +196,15 @@ void slowTurnOnFastOff() {
 	delay(1000);
 }
 
-void (*ALL_ANIMATIONS[])() = {cautious, fastest, provoking, makingSure};
+void (*ALL_ANIMATIONS[])() = {cautious, fastest, provoking, makingSure, deking, scouting};
 
 void loop() {
 
 	if (digitalRead(SWITCH_PIN) == LOW) {
 		delay(random(1000));
-		long CURRENT_ANIMATION = random(4);
+		long CURRENT_ANIMATION = random(6);
 //		ALL_ANIMATIONS[CURRENT_ANIMATION]();
-		makingSure();
-
+		slowFastSlow();
 	}
 
 }
