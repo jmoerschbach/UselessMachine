@@ -9,7 +9,7 @@ Servo hatchServo;
 constexpr int HATCH_CLOSE = 0;
 constexpr int HATCH_OPEN = 90;
 constexpr int MIN = 130;
-constexpr int MAX = 50;
+constexpr int MAX = 40;
 int val;    // variable to read the value from the analog pin
 
 void setup() {
@@ -18,6 +18,10 @@ void setup() {
 	hatchServo.attach(HATCH_PIN);
 	leverServo.write(MIN);
 	hatchServo.write(HATCH_CLOSE);
+	delay(200);
+
+	moveHatch(0, 100, 0);
+
 }
 
 void loop() {
@@ -27,6 +31,23 @@ void loop() {
 	}
 
 }
+
+void moveHatch(uint8_t startPos, uint8_t endPos, uint16_t delayBetweenSteps) {
+	setHatch(startPos);
+	for (uint8_t i = startPos; i < endPos; i += 10) {
+		setHatch(i);
+		delay(delayBetweenSteps);
+	}
+}
+
+void setHatch(uint8_t percent) {
+	if (percent < 0 || percent > 100) {
+		return;
+	}
+
+	hatchServo.write((percent / 100.0) * HATCH_OPEN);
+}
+
 void simpleTurnOff() {
 	leverServo.write(MIN);
 }
