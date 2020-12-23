@@ -112,9 +112,9 @@ void makingSure() {
 	moveLever(0, 100, 0);
 	delay(2000);
 	moveLeverBackwards(100, 30, 50);
-	closeHatch(90, 70, 100);
+	closeHatch(90, 60, 200);
 	delay(1000);
-	openHatch(60, 90, 50);
+	openHatch(60, 90, 100);
 	setLever(80);
 	delay(1000);
 	setLever(0);
@@ -126,13 +126,14 @@ void makingSure() {
 void deking() {
 	long numberOfDisguises = random(2, 6);
 	for (uint8_t i = 0; i < numberOfDisguises; i++) {
-		setHatch(70);
+		openHatch(0, 70, 100);
+//		setHatch(70);
 		delay(400);
 		setHatch(0);
 		delay(200);
 		delay(random(100, 1000));
 	}
-	setHatch(80);
+	openHatch(0, 80, 30);
 	setLever(100);
 	delay(400);
 	setLever(0);
@@ -196,15 +197,14 @@ void slowTurnOnFastOff() {
 	delay(1000);
 }
 
-void (*ALL_ANIMATIONS[])() = {cautious, fastest, provoking, makingSure, deking, scouting};
+void (*ALL_ANIMATIONS[])() = {cautious, fastest, provoking, makingSure, deking, scouting, slowFast, slowFastSlow};
 
 void loop() {
 
 	if (digitalRead(SWITCH_PIN) == LOW) {
 		delay(random(1000));
-		long CURRENT_ANIMATION = random(6);
-//		ALL_ANIMATIONS[CURRENT_ANIMATION]();
-		slowFastSlow();
+		long CURRENT_ANIMATION = random(8);
+		ALL_ANIMATIONS[CURRENT_ANIMATION]();
 	}
 
 }
