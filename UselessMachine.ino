@@ -108,6 +108,22 @@ void provoking() {
 	delay(500);
 }
 
+void makingSure() {
+	moveHatch(0, 90, 10);
+	moveLever(0, 100, 0);
+	delay(2000);
+	moveLeverBackwards(100, 30, 50);
+	setHatch(60);
+	delay(1000);
+	moveHatch(60, 90, 50);
+	moveLever(30, 90, 200);
+	delay(1000);
+	setLever(0);
+	delay(100);
+	setHatch(0);
+	delay(100);
+}
+
 void simpleTurnOff() {
 	leverServo.write(LEVER_FORTH);
 }
@@ -131,14 +147,15 @@ void slowTurnOnFastOff() {
 	delay(1000);
 }
 
-void (*ALL_ANIMATIONS[])() = {cautious, fastest, provoking};
+void (*ALL_ANIMATIONS[])() = {cautious, fastest, provoking, makingSure};
 
 void loop() {
 
 	if (digitalRead(SWITCH_PIN) == LOW) {
-		long CURRENT_ANIMATION = random(3);
-		ALL_ANIMATIONS[CURRENT_ANIMATION]();
-//		cautious();
+		delay(random(1000));
+		long CURRENT_ANIMATION = random(4);
+//		ALL_ANIMATIONS[CURRENT_ANIMATION]();
+		makingSure();
 
 	}
 
